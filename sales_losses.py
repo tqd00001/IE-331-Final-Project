@@ -16,23 +16,22 @@ def _():
 
 @app.cell
 def _(pl):
-    products = pl.read_csv("team-01/data/products.csv")
-    products
+    products = pl.read_parquet("pipeline/products.parquet")
     return (products,)
 
 
 @app.cell
 def _(pl):
-    inventory = pl.read_csv("team-01/data/inventory.csv")
+    inventory = pl.read_parquet("pipeline/inventory.parquet")
 
     out_of_stock = inventory.filter(pl.col("Stock_On_Hand") == 0)
-    out_of_stock, inventory
+    out_of_stock
     return (out_of_stock,)
 
 
 @app.cell
 def _(out_of_stock, pl):
-    sales = pl.read_csv("team-01/data/sales.csv")
+    sales = pl.read_parquet("pipeline/sales.parquet")
     sales = sales.with_columns(
         pl.col("Date").cast(pl.Date)
     )
@@ -45,17 +44,16 @@ def _(out_of_stock, pl):
         ])
     )
     lost_sales = lost_sales.sort("Store_ID")
-    sales, OOS_and_sales, lost_sales
+    OOS_and_sales, lost_sales
     return (lost_sales,)
 
 
 @app.cell
 def _(pl):
-    stores = pl.read_csv("team-01/data/stores.csv")
+    stores = pl.read_parquet("pipeline/stores.parquet")
     stores = stores.with_columns(
         pl.col("Store_Open_Date").cast(pl.Date)
     )
-    stores
     return (stores,)
 
 
