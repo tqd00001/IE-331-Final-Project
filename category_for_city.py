@@ -19,7 +19,7 @@ def _(mo):
     mo.md(
         r"""
         #Question 5
-        ##What is the most popular product category in each city and what city has the highest sales per category? 
+        ##What is the most popular product category in each city and what city has the highest sales per category?
         """
     )
     return
@@ -79,7 +79,7 @@ def _(mo):
 
         Most cities are sitting right around five thousand sales for their highest selling category, some spike into the ten to fifteen thousand range, but Cuidad de Mexico, Guadalajara, and Monterrey are outliers, with their top product categories selling nearly twenty to twenty five thousand products.
 
-        This data is useful when deciding how to finance marketing. Some cities being larger than others introduces some proportionality of sales issues, but ultimately you would want to advertise to larger masses anyway. Additionally, this graph provides information on what you should advertise. You can push similar products to those you know people in the area have bought in the past, but you can also test out products that have not been so popular to see if they spark interest in a different product category. That woud have to be a more startegic decision. 
+        This data is useful when deciding how to finance marketing. Some cities being larger than others introduces some proportionality of sales issues, but ultimately you would want to advertise to larger masses anyway. Additionally, this graph provides information on what you should advertise. You can push similar products to those you know people in the area have bought in the past, but you can also test out products that have not been so popular to see if they spark interest in a different product category. That woud have to be a more startegic decision.
         """
     )
     return
