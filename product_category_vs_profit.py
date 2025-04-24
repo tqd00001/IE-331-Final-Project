@@ -28,20 +28,9 @@ def _(mo):
 
 @app.cell
 def _(pl):
-    products = pl.read_csv("team-01/data/products.csv")
+    products = pl.read_parquet("pipeline/products.parquet")
     products = (
          products
-         .with_columns(
-             pl.col(["Product_Cost","Product_Price"])
-             .str.strip_chars("$")
-             .str.strip_chars()
-         )
-         .select(
-             pl.col("Product_ID"),
-             pl.col("Product_Category"),
-             pl.col("Product_Cost").cast(pl.Float32),
-             pl.col("Product_Price").cast(pl.Float32)
-         )
         .with_columns(
              Product_Profit = pl.col("Product_Price")-pl.col("Product_Cost")
         )
@@ -51,7 +40,7 @@ def _(pl):
 
 @app.cell
 def _(pl):
-    sales = pl.read_csv("team-01/data/sales.csv")
+    sales = pl.read_parquet("pipeline/sales.parquet")
     product_sales = (
         sales
         .group_by("Product_ID")
@@ -65,7 +54,7 @@ def _(pl):
 
 @app.cell
 def _(pl):
-    stores = pl.read_csv("team-01/data/stores.csv")
+    stores = pl.read_parquet("pipeline/stores.parquet")
     return (stores,)
 
 
