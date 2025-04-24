@@ -60,14 +60,14 @@ def _(pl):
         )
         .sort("Product_ID")
         )
-    return (product_sales,)
+    return product_sales, sales
 
 
 @app.cell
 def _(pl):
     stores = pl.read_csv("team-01/data/stores.csv")
     stores
-    return
+    return (stores,)
 
 
 @app.cell
@@ -89,13 +89,13 @@ def _(pl, product_sales, products):
 
 @app.cell
 def _(profit_by_category, px):
-    px.bar(profit_by_category, x = "Product_Category", y = "Total_Product_Profit", title = "Profit Earned by Product Category", labels = {"Product_Category": "Product Category","Total_Product_Profit": "Profit"})
+    px.bar(profit_by_category, x = "Product_Category", y = "Total_Product_Profit", title = "Profit Earned by Product Category", labels = {"Product_Category": "Product Category","Total_Product_Profit": "Profit ($)"})
     return
 
 
 @app.cell
 def _(mo):
-    mo.md(r"""Toys are the biggest driver of profit, while the sports & outdoors category fuels profit the least out of the five product categories.""")
+    mo.md(r"""Toys are the biggest driver of profit bringing in aproximately 1.08 million dollare, while the sports & outdoors category fuels profit the least out of the five product categories making only 505.718 thousand dollars.""")
     return
 
 
@@ -106,7 +106,33 @@ def _(mo):
 
 
 @app.cell
-def _():
+def _(pl, products, sales, stores):
+    profit_category_location = products.join(sales, on="Product_ID")
+    profit_category_location = profit_category_location.join(stores, on="Store_ID")
+    profit_category_location = (
+        profit_category_location
+         .with_columns(
+            (pl.col("Product_Profit")*pl.col("Units")).round(2).alias("Sale_Profit")
+            )
+        .select("Product_Category", "Sale_Profit", "Store_Location")
+        .group_by("Product_Category","Store_Location")
+        .agg(
+            pl.col("Sale_Profit").sum().alias("Total_Profit")
+        )
+        .sort("Total_Profit", descending=True)
+    )
+    return (profit_category_location,)
+
+
+@app.cell
+def _(profit_category_location, px):
+    px.bar(profit_category_location, x = "Store_Location", y = "Total_Profit", color = "Product_Category", barmode="group", title = "Profit Earned by Product Category and Location", labels = {"Total_Profit": "Profit ($)", "Product_Category":"Product Category", "Store_Location": "Store Location"})
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""The same pattern of overall profits grouped by category remains in both downtown and residential Locations. However, in commercial and airport locations, electronics jump above toys in earned profit and in airport locations alone, games jump above arts & crafts in earned profit. """)
     return
 
 
