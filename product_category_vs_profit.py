@@ -16,12 +16,13 @@ def _():
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""
-        #Question 1
-        ##Which product categories drive the biggest profits? Is this the same across store locations?
-        """
-    )
+    mo.md(r"""#Question 1""")
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""##Which product categories drive the biggest profits?""")
     return
 
 
@@ -45,13 +46,13 @@ def _(pl):
              Product_Profit = pl.col("Product_Price")-pl.col("Product_Cost")
         )
     )
-    return
+    return (products,)
 
 
 @app.cell
 def _(pl):
     sales = pl.read_csv("team-01/data/sales.csv")
-    sales = (
+    product_sales = (
         sales
         .group_by("Product_ID")
         .agg(
@@ -59,45 +60,53 @@ def _(pl):
         )
         .sort("Product_ID")
         )
+    return (product_sales,)
+
+
+@app.cell
+def _(pl):
+    stores = pl.read_csv("team-01/data/stores.csv")
+    stores
+    return
+
+
+@app.cell
+def _(pl, product_sales, products):
+    profit_by_category = products.join(product_sales, on="Product_ID")
+    profit_by_category = (
+        profit_by_category
+        .with_columns(
+            (pl.col("Product_Profit")*pl.col("Units_Sold_By_Product")).round(2).alias("Total_Product_Profit")
+            )
+        .group_by("Product_Category")
+        .agg(
+            pl.col("Total_Product_Profit").sum()
+        )
+        .sort("Total_Product_Profit", descending = True)
+    )
+    return (profit_by_category,)
+
+
+@app.cell
+def _(profit_by_category, px):
+    px.bar(profit_by_category, x = "Product_Category", y = "Total_Product_Profit", title = "Profit Earned by Product Category", labels = {"Product_Category": "Product Category","Total_Product_Profit": "Profit"})
     return
 
 
 @app.cell
 def _(mo):
-    mo.md(
-        r"""
-        It's creating a list because I used group_by().agg()
-        Try with_cols first but actually think about if that makes sense before implementing
-        """
-    )
+    mo.md(r"""Toys are the biggest driver of profit, while the sports & outdoors category fuels profit the least out of the five product categories.""")
     return
 
 
-app._unparsable_cell(
-    r"""
-    profit_by_category = products.join(sales, on=\"Product_ID\")
-    profit_by_category = (
-        profit_by_category
-        .with_columns(
-            pl.col(\"Product_Profit\")*pl.col(\"Units_Sold_By_Product\")).round(2))
-            .alias(\"Total_Product_Profit\"
-        )
-        .group_by(\"Product_Category\")
-        .agg(
-            ((pl.col(\"Product_Profit\")*pl.col(\"Units_Sold_By_Product\")).round(2))
-            .alias(\"Total_Product_Profit\")
-        )
-        .sort(\"Total_Product_Profit\")
-    )
-    profit_by_category
-    """,
-    name="_"
-)
+@app.cell
+def _(mo):
+    mo.md(r"""##Is this the same across store locations?""")
+    return
 
 
 @app.cell
-def _(profit_by_category, px):
-    px.bar(profit_by_category, x = "Product_Category", y = "Total_Product_Profit")
+def _():
     return
 
 
