@@ -29,7 +29,6 @@ def _(pl):
 @app.cell
 def _(pl):
     sales = pl.read_parquet("pipeline/sales.parquet")
-    sales
     return (sales,)
 
 
@@ -79,7 +78,7 @@ def _(profit_by_location, px):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Profits vary greatly between store locations. Downtown locations earn the most profit making approximately 2.25 million dollars, while the other three store locations don't even crest 1 million dollars in total profit. Being in more populated areas such as downtown locations is certainly increasing profits""")
+    mo.md(r"""Profits vary greatly between store locations. Downtown locations earn the most profit making approximately 2.25 million dollars, while the other three store locations don't even crest 1 million dollars in total profit. Being in more populated areas such as downtown locations is certainly increasing profits. To increase profits, targeting other locations may be a smart business decision, for example, focusing in on creating more commerical business customers to increase those profits.""")
     return
 
 
