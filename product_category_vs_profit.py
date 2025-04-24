@@ -111,7 +111,7 @@ def _(pl, products, sales, stores):
     profit_category_location = (
         profit_category_location
          .with_columns(
-            (pl.col("Product_Profit")*pl.col("Units")).round(2).alias("Sale_Profit")
+    (pl.col("Product_Profit")*pl.col("Units")).round(2).alias("Sale_Profit")
             )
         .select("Product_Category", "Sale_Profit", "Store_Location")
         .group_by("Product_Category","Store_Location")
