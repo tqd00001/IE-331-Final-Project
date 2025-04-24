@@ -11,52 +11,74 @@ def _():
     import marimo as mo
     import polars as pl
     import plotly.express as px
-    return (pl,)
+    return pl, px
 
 
 @app.cell
 def _(pl):
-    products = pl.read_csv("team-01/data/products.csv")
-    products
-    return
+    products = pl.read_parquet("pipeline/products.parquet")
+    return (products,)
 
 
 @app.cell
 def _(pl):
-    inventory = pl.read_csv("team-01/data/inventory.csv")
+    inventory = pl.read_parquet("pipeline/inventory.parquet")
 
     out_of_stock = inventory.filter(pl.col("Stock_On_Hand") == 0)
-    out_of_stock, inventory
-    return
+    out_of_stock
+    return (out_of_stock,)
 
 
 @app.cell
-def _(pl):
-    sales = pl.read_csv("team-01/data/sales.csv")
+def _(out_of_stock, pl):
+    sales = pl.read_parquet("pipeline/sales.parquet")
     sales = sales.with_columns(
         pl.col("Date").cast(pl.Date)
     )
-
-    sales
-    return (sales,)
+    OOS_and_sales = sales.join(out_of_stock, on=["Store_ID", "Product_ID"], how="inner")
+    lost_sales = (
+        OOS_and_sales
+        .group_by(["Store_ID", "Product_ID"])
+        .agg([
+            pl.sum("Units").alias("Units_Lost")
+        ])
+    )
+    lost_sales = lost_sales.sort("Store_ID")
+    OOS_and_sales, lost_sales
+    return (lost_sales,)
 
 
 @app.cell
 def _(pl):
-    stores = pl.read_csv("team-01/data/stores.csv")
+    stores = pl.read_parquet("pipeline/stores.parquet")
     stores = stores.with_columns(
         pl.col("Store_Open_Date").cast(pl.Date)
     )
-    stores
     return (stores,)
 
 
 @app.cell
-def _(sales, stores):
-    stores_and_sales = stores.join(sales, on="Store_ID")
-    stores_and_sales = stores_and_sales.sort("Store_ID")
-    stores_and_sales = stores_and_sales.drop(["Store_Open_Date"])
-    stores_and_sales
+def _(lost_sales, products, stores):
+    lost_sales_at_stores = (
+        lost_sales
+        .join(stores, on="Store_ID")
+        .join(products, on="Product_ID")
+        .select(["Store_ID", "Product_ID", "Units_Lost", "Store_Location", "Product_Name"])
+    )
+    lost_sales_at_stores
+    return (lost_sales_at_stores,)
+
+
+@app.cell
+def _(lost_sales_at_stores, px):
+    location_lost_sales = px.bar(
+        lost_sales_at_stores,
+        x="Store_Location",
+        y="Units_Lost",
+        color="Product_Name",
+        title="Lost Sales due to Out of Stock Products"
+    )
+    location_lost_sales
     return
 
 

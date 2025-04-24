@@ -11,45 +11,58 @@ def _():
     import marimo as mo
     import polars as pl
     import plotly.express as px
-    return (pl,)
-
-
-@app.cell
-def _(pl):
-    products = pl.read_parquet("pipeline/products.parquet")
-    return (products,)
+    return pl, px
 
 
 @app.cell
 def _(pl):
     sales = pl.read_parquet("pipeline/sales.parquet")
+    sales
     return (sales,)
 
 
 @app.cell
-def _(pl, products, sales):
-    product_sales = products.join(sales, on="Product_ID")
-    product_sales = (
-        product_sales
-        .with_columns(
-            pl.col("Date").dt.month().alias("Month")
+def _(pl, sales):
+    sales_with_seasons = (
+        sales.with_columns([
+            pl.col("Date").dt.month().alias("Month"),
+            pl.col("Date").dt.year().alias("Year"),
+        ])
+    )
+    sales_with_seasons = (
+        sales_with_seasons.with_columns(
+            pl.when(pl.col("Month").is_in([12, 1, 2])).then(pl.lit("Winter"))
+                .when(pl.col("Month").is_in([3, 4, 5])).then(pl.lit("Spring"))
+                .when(pl.col("Month").is_in([6, 7, 8])).then(pl.lit("Summer"))
+                .when(pl.col("Month").is_in([9, 10, 11])).then(pl.lit("Fall"))
+                .alias("Season")
         )
     )
-    product_sales = (
-        product_sales
-        .with_columns(
-            pl.when(pl.col("Month").is_in([12, 1, 2]))
-            .then(pl.lit("Winter"))
-            .when(pl.col("Month").is_in([3, 4, 5]))
-            .then(pl.lit("Spring"))
-            .when(pl.col("Month").is_in([6, 7, 8]))
-            .then(pl.lit("Summer"))
-            .when(pl.col("Month").is_in([9, 10, 11]))
-            .then(pl.lit("Fall"))
-            .alias("Season")
-        )
+    sales_with_seasons
+    return (sales_with_seasons,)
+
+
+@app.cell
+def _(pl, sales_with_seasons):
+    seasonal_sales = (
+        sales_with_seasons
+        .group_by("Season")
+        .agg(pl.col("Units").sum().alias("Units_Sold"))
     )
-    product_sales
+    seasonal_sales
+    return (seasonal_sales,)
+
+
+@app.cell
+def _(px, seasonal_sales):
+    seasonal_trends_bar = px.bar(
+        seasonal_sales,
+        x="Season",
+        y="Units_Sold",
+        title="Total Units Sold by Season",
+        color="Season"
+    )
+    seasonal_trends_bar
     return
 
 
