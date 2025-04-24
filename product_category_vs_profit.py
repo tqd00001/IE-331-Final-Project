@@ -66,7 +66,6 @@ def _(pl):
 @app.cell
 def _(pl):
     stores = pl.read_csv("team-01/data/stores.csv")
-    stores
     return (stores,)
 
 
@@ -95,7 +94,7 @@ def _(profit_by_category, px):
 
 @app.cell
 def _(mo):
-    mo.md(r"""Toys are the biggest driver of profit bringing in aproximately 1.08 million dollare, while the sports & outdoors category fuels profit the least out of the five product categories making only 505.718 thousand dollars.""")
+    mo.md(r"""Toys are the biggest driver of profit bringing in aproximately 1.08 million dollars, while the sports & outdoors category fuels profit the least out of the five product categories making only 505.718 thousand dollars.""")
     return
 
 
@@ -132,7 +131,7 @@ def _(profit_category_location, px):
 
 @app.cell
 def _(mo):
-    mo.md(r"""The same pattern of overall profits grouped by category remains in both downtown and residential Locations. However, in commercial and airport locations, electronics jump above toys in earned profit and in airport locations alone, games jump above arts & crafts in earned profit. """)
+    mo.md(r"""The same pattern of overall profits grouped by category remains in both downtown and residential Locations. However, in commercial and airport locations, electronics jump above toys in earned profit and in airport locations alone, games jump above arts & crafts in earned profit.""")
     return
 
 
