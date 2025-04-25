@@ -76,7 +76,8 @@ def _(lost_sales_at_stores, px):
         x="Store_Location",
         y="Units_Lost",
         color="Product_Name",
-        title="Lost Sales due to Out of Stock Products"
+        title="Lost Sales due to Out of Stock Products",
+        labels = {"Units_Lost": "Units Lost", "Store_Location": "Store Location", "Product_Name": "Product Name"}
     )
     location_lost_sales
     return
