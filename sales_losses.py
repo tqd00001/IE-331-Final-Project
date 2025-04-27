@@ -63,7 +63,7 @@ def _(lost_sales, products, stores):
         lost_sales
         .join(stores, on="Store_ID")
         .join(products, on="Product_ID")
-        .select(["Store_ID", "Product_ID", "Units_Lost", "Store_Location", "Product_Name"])
+        .select(["Store_ID", "Product_ID", "Units_Lost", "Store_Location","Store_Name", "Product_Name"])
     )
     lost_sales_at_stores
     return (lost_sales_at_stores,)
@@ -71,14 +71,29 @@ def _(lost_sales, products, stores):
 
 @app.cell
 def _(lost_sales_at_stores, px):
-    location_lost_sales = px.bar(
+    location_lost_sales_location = px.bar(
         lost_sales_at_stores,
         x="Store_Location",
         y="Units_Lost",
         color="Product_Name",
-        title="Lost Sales due to Out of Stock Products"
+        title="Lost Sales due to Out of Stock Products by Store Location",
+        labels = {"Units_Lost": "Units Lost", "Store_Location": "Store Location", "Product_Name": "Product Name"}
     )
-    location_lost_sales
+    location_lost_sales_location
+    return
+
+
+@app.cell
+def _(lost_sales_at_stores, px):
+    location_lost_sales_name = px.bar(
+        lost_sales_at_stores,
+        x="Store_Name",
+        y="Units_Lost",
+        color="Product_Name",
+        title="Lost Sales due to Out of Stock Products by Store",
+        labels = {"Units_Lost": "Units Lost", "Store_Name": "Store Name", "Product_Name": "Product Name"}
+    )
+    location_lost_sales_name
     return
 
 

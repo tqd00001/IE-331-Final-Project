@@ -25,8 +25,7 @@ def _(pl):
 def _(pl, sales):
     sales_with_seasons = (
         sales.with_columns([
-            pl.col("Date").dt.month().alias("Month"),
-            pl.col("Date").dt.year().alias("Year"),
+            pl.col("Date").dt.month().alias("Month")
         ])
     )
     sales_with_seasons = (
@@ -60,7 +59,8 @@ def _(px, seasonal_sales):
         x="Season",
         y="Units_Sold",
         title="Total Units Sold by Season",
-        color="Season"
+        color="Season",
+        labels = {"Units_Sold": "Units Sold", "Season": "Season"}
     )
     seasonal_trends_bar
     return
