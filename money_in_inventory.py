@@ -25,12 +25,12 @@ def _(mo):
     return
 
 
-app._unparsable_cell(
-    r"""
-    uv run marimo run
-    """,
-    name="_"
-)
+@app.cell
+def _(pl):
+    products = pl.read_parquet("pipeline/products.parquet")
+    inventory = pl.read_parquet("pipeline/inventory.parquet")
+    sales = pl.read_parquet("pipeline/sales.parquet")
+    return inventory, products, sales
 
 
 @app.cell
