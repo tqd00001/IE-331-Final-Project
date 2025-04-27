@@ -37,7 +37,7 @@ Explanation of code:
  "lost_sales" was then joined with the "stores" and "products" dataframes to make "lost_sales_at_stores," selecting only these columns to be shown: "Store_ID", "Product_ID", "Units_Lost", "Store_Location","Store_Name", "Product_Name."
  Two bar graphs were made, one that shows lost sales by the area a store is in and one that shows lost sales by the store itself. 
  From the graphs, stores located in a downtown area seem to lose the most sales due to a product being out of stock by a very significant margin. The difference in lost sales between downtown areas (~18k) and the next highest, commercial areas (~6k) is around twelve thousand. Commercial areas and residential areas are around the same in terms of lost sales with airports losing the least by far. 
- So it could be concluded that sales are being lost due to some items being out of stock.d
+ So it could be concluded that sales are being lost due to some items being out of stock.
 
 Question 4: How much money is tied up in inventory at the toy stores? How long will it last? 
 
