@@ -24,7 +24,7 @@ Explanation of code:
 
 The code in this file is simple. It reads in sales.parquet; and from that, creates "sales_with_seasons" (SWS). SWS creates a new column, Month. Using the month column, a new Seasons column was made by using, "when, then." The seasons were separated into Winter, Spring, Summer, and Autumn according to their months. A new dataframe was made with SWS called "seasonal_sales" which groups by the season and then sums all of the units sold by season. A bar graph, "seasonal_trends_bar" was made to visualize the findings.
 
-It looks like the most toy sales are occuring during the summer and spring, with spring seeing the most sales at 332k units sold. Fall, ironically, is where the lowest sales are observed. From this data, I would imagine there are events in the summer and spring that cause this increase in toy sales.
+It looks like the most toy sales are occurring during the summer and spring, with spring seeing the most sales at 332k units sold. Fall, ironically, is where the lowest sales are observed. From this data, I would imagine there are events in the summer and spring that cause this increase in toy sales.
 
 Question 3: Are sales being lost with out-of-stock products at certain locations? 
 
@@ -44,7 +44,6 @@ Question 4: How much money is tied up in inventory at the toy stores? How long w
 Run: uv run marimo run money_in_inventory.py 
 
 Explanation of code: This code performs an analysis of inventory and sales data for a toy store. First, it calculates the total stock for each product and multiplies it by the unit price to get the total inventory value per product (Money_in_Inventory). This is then visualized using a bar chart. In the second part, the code analyzes sales data to estimate how many days each product’s inventory will last based on its average daily sales. By calculating the total sales period and dividing the total units sold by the number of days, it derives a daily sales rate per product. Then, dividing current stock by this rate gives an estimate of Days_Left for each item. This is visualized in a second bar chart. 
-
 
 
 Question 5: What is the most popular product category in each city? 
