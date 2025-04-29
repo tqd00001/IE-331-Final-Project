@@ -11,7 +11,7 @@ def _():
     import marimo as mo
     import polars as pl
     import plotly.express as px
-    return pl, px
+    return mo, pl, px
 
 
 @app.cell
@@ -84,6 +84,12 @@ def _(lost_sales_at_stores, px):
 
 
 @app.cell
+def _(mo):
+    mo.md(r"""####Downtown stores seem to lose more sales compared to the rest of the locations by a very wide margin. Residential and commercial areas are about the same with airports not losing large number in sales compared to the rest. """)
+    return
+
+
+@app.cell
 def _(lost_sales_at_stores, px):
     location_lost_sales_name = px.bar(
         lost_sales_at_stores,
@@ -94,6 +100,12 @@ def _(lost_sales_at_stores, px):
         labels = {"Units_Lost": "Units Lost", "Store_Name": "Store Name", "Product_Name": "Product Name"}
     )
     location_lost_sales_name
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md("""#### Looking at it by store, the results seem to vary widely. Mexicali store 2, located in a downtown area, loses the most sales due to out of stock products. However, second place, Guanajuato store 2 is in a commercial district. """)
     return
 
 

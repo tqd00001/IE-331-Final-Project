@@ -11,7 +11,7 @@ def _():
     import marimo as mo
     import polars as pl
     import plotly.express as px
-    return pl, px
+    return mo, pl, px
 
 
 @app.cell
@@ -63,6 +63,12 @@ def _(px, seasonal_sales):
         labels = {"Units_Sold": "Units Sold", "Season": "Season"}
     )
     seasonal_trends_bar
+    return
+
+
+@app.cell
+def _(mo):
+    mo.md(r"""#### Spring and Summer look to have the most toys sold when comparing the seasons. Surprisingly, Winter does not have the most. Perhaps there are events in the summer and spring that lead to more toys sold. """)
     return
 
 
